@@ -275,8 +275,8 @@ export default function AssessmentResult({ patientData, translations, language, 
                                     </h4>
                                     <p className="text-red-600 text-sm">
                                         {language === 'TH'
-                                            ? 'กรุณาแจ้งแพทย์เกี่ยวกับประวัติการแพ้ยาของท่านก่อนรับยาปฏิชีวนะทุกครั้ง เพื่อป้องกันอาการแพ้ที่อาจเป็นอันตราย'
-                                            : 'Please inform your doctor about your drug allergies before receiving any antibiotics to prevent potentially dangerous allergic reactions.'}
+                                            ? 'ผลการประเมินนี้เป็นเพียงข้อมูลเบื้องต้นเท่านั้น กรุณาปรึกษาแพทย์หรือผู้เชี่ยวชาญเพื่อรับคำแนะนำที่เหมาะสมกับสภาวะของท่าน โดยเฉพาะอย่างยิ่งเมื่อมีประวัติการแพ้ยา'
+                                            : 'This assessment is for preliminary information only. Please consult a doctor or healthcare professional for appropriate advice tailored to your condition, especially when you have a history of drug allergies.'}
                                     </p>
                                 </div>
                             </div>
