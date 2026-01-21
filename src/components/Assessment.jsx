@@ -25,6 +25,7 @@ export default function Assessment({ translations, language, onBackToLobby, onCo
 
         // Step 2: Symptom Deep Dive
         primarySymptom: [], // Changed to array for multiple selection
+        feverLevel: '', // 'lowFever' or 'highFever'
         symptomDuration: '',
         symptomSeverity: 'mild',
         additionalSymptoms: '',
@@ -255,8 +256,8 @@ export default function Assessment({ translations, language, onBackToLobby, onCo
                                                     handleInputChange('primarySymptom', newSymptoms);
                                                 }}
                                                 className={`px-4 py-3 rounded-lg border-2 transition-all font-medium text-sm ${(patientData.primarySymptom || []).includes(symptom.value)
-                                                        ? 'border-blue-600 bg-blue-50 text-blue-700'
-                                                        : 'border-gray-300 hover:border-blue-300 text-gray-700'
+                                                    ? 'border-blue-600 bg-blue-50 text-blue-700'
+                                                    : 'border-gray-300 hover:border-blue-300 text-gray-700'
                                                     }`}
                                             >
                                                 {symptom.label}
@@ -264,6 +265,32 @@ export default function Assessment({ translations, language, onBackToLobby, onCo
                                         ))}
                                     </div>
                                 </div>
+
+                                {/* Fever Level Selection - Shows only when fever is selected */}
+                                {(patientData.primarySymptom || []).includes('fever') && (
+                                    <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-lg">
+                                        <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                            {translations.feverLevel}
+                                        </label>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            {[
+                                                { value: 'lowFever', label: translations.lowFever },
+                                                { value: 'highFever', label: translations.highFever }
+                                            ].map((level) => (
+                                                <button
+                                                    key={level.value}
+                                                    onClick={() => handleInputChange('feverLevel', level.value)}
+                                                    className={`px-4 py-3 rounded-lg border-2 transition-all font-medium text-sm ${patientData.feverLevel === level.value
+                                                            ? 'border-yellow-600 bg-yellow-100 text-yellow-800'
+                                                            : 'border-gray-300 hover:border-yellow-400 text-gray-700'
+                                                        }`}
+                                                >
+                                                    {level.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
 
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">

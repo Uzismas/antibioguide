@@ -35,6 +35,14 @@ export default function AssessmentResult({ patientData, translations, language, 
                 reasons.push(language === 'TH' ? 'มีอาการที่มีความเสี่ยงปานกลาง' : 'Moderate-risk symptoms present');
             }
 
+            // Fever level assessment
+            if (symptoms.includes('fever') && patientData.feverLevel === 'highFever') {
+                riskScore += 8;
+                reasons.push(language === 'TH' ? 'มีไข้สูง (≥38.5°C)' : 'High fever (≥38.5°C)');
+            } else if (symptoms.includes('fever') && patientData.feverLevel === 'lowFever') {
+                riskScore += 3;
+            }
+
             // Add points for multiple symptoms
             if (symptoms.length > 1) {
                 riskScore += 5 * (symptoms.length - 1); // +5 points per additional symptom
