@@ -91,8 +91,10 @@ export default function AssessmentResult({ patientData, translations, language, 
         } else if (patientData.renalFunction === 'mildImpairment' || patientData.liverFunction === 'mildImpairment') {
             riskScore += 5;
         } else if (patientData.renalFunction === 'unknown' || patientData.liverFunction === 'unknown') {
-            riskScore += 8;
-            reasons.push(language === 'TH' ? 'ไม่ทราบสถานะการทำงานของอวัยวะ (ควรตรวจสอบ)' : 'Unknown organ function status (should be evaluated)');
+            // Unknown status should not significantly increase antibiotic recommendation
+            // Only adds small caution score
+            riskScore += 2;
+            reasons.push(language === 'TH' ? 'ไม่ทราบสถานะการทำงานของอวัยวะ (แนะนำให้ตรวจสอบก่อนใช้ยา)' : 'Unknown organ function status (evaluation recommended before medication)');
         }
 
         // 4. Recent Antibiotic Use (15 points)
@@ -108,10 +110,11 @@ export default function AssessmentResult({ patientData, translations, language, 
         }
 
         // Determine Risk Level
-        if (riskScore >= 60) {
+        // Adjusted thresholds for more accurate assessment
+        if (riskScore >= 50) {
             riskLevel = 'high';
             recommendation = 'yes';
-        } else if (riskScore >= 30) {
+        } else if (riskScore >= 35) {
             riskLevel = 'moderate';
             recommendation = 'yes';
         } else {
