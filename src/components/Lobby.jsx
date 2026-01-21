@@ -1,5 +1,5 @@
 import { Activity, ArrowRight } from 'lucide-react';
-import medicalBg from '/medical-bg.png';
+import medicalBg from '/public/medical-bg.png';
 
 export default function Lobby({ translations, onStartAssessment }) {
     return (
