@@ -18,7 +18,7 @@ const translations = {
 
         // Lobby
         appTitle: 'AntiBioguide',
-        appSubtitle: 'ระบบสนับสนุนการตัดสินใจในการใช้ยาปฏิชีวนะ (เบื้องต้น)',
+        appSubtitle: 'ระบบประเมินการใช้ยาปฏิชีวนะ (เบื้องต้น)',
         startAssessment: 'เริ่มการประเมิน',
 
         // Assessment
@@ -115,7 +115,7 @@ const translations = {
 
         // Lobby
         appTitle: 'AntiBioguide',
-        appSubtitle: 'Antibiotic Decision Support System (Preliminary)',
+        appSubtitle: 'Antibiotic Assessment System (Preliminary)',
         startAssessment: 'Start Assessment',
 
         // Assessment
