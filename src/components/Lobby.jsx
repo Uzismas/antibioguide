@@ -1,11 +1,12 @@
 import { Activity, ArrowRight } from 'lucide-react';
+import medicalBg from '../assets/medical-bg.png';
 
 export default function Lobby({ translations, onStartAssessment }) {
     return (
         <div
             className="min-h-screen flex items-center justify-center relative overflow-hidden"
             style={{
-                backgroundImage: 'url(/antibioguide/medical-bg.png)',
+                backgroundImage: `url(${medicalBg})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat'
