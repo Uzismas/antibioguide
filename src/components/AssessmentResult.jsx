@@ -18,34 +18,50 @@ export default function AssessmentResult({ patientData, translations, language, 
         let riskLevel = 'low'; // 'low', 'moderate', 'high'
         let reasons = [];
 
-        // 1. Symptom Severity Assessment (30 points)
+        // 1. Symptom Severity Assessment (40 points)
         if (patientData.primarySymptom && patientData.primarySymptom.length > 0) {
             const symptoms = Array.isArray(patientData.primarySymptom) ? patientData.primarySymptom : [patientData.primarySymptom];
             const highRiskSymptoms = ['difficultyBreathing', 'urinarySymptoms', 'skinInfection'];
-            const moderateRiskSymptoms = ['fever', 'cough', 'sorethroat'];
+            const mildSymptoms = ['cough', 'sorethroat', 'diarrhea', 'other'];
+            const duration = parseInt(patientData.symptomDuration) || 0;
 
             const hasHighRisk = symptoms.some(s => highRiskSymptoms.includes(s));
-            const hasModerateRisk = symptoms.some(s => moderateRiskSymptoms.includes(s));
+            const hasFever = symptoms.includes('fever');
+            const hasMildOnly = symptoms.every(s => mildSymptoms.includes(s) || s === 'fever');
 
+            // High-risk symptoms always get points regardless of duration
             if (hasHighRisk) {
                 riskScore += 20;
                 reasons.push(language === 'TH' ? 'มีอาการที่มีความเสี่ยงสูง' : 'High-risk symptoms present');
-            } else if (hasModerateRisk) {
+            }
+            // Mild symptoms with short duration (<3 days) - minimal points
+            else if (hasMildOnly && duration < 3) {
+                riskScore += 3;
+                reasons.push(language === 'TH' ? 'มีอาการเล็กน้อยและระยะเวลาสั้น (อาจไม่จำเป็นต้องใช้ยา)' : 'Mild symptoms with short duration (may not require antibiotics)');
+            }
+            // Mild symptoms with moderate duration (3-7 days)
+            else if (hasMildOnly && duration >= 3 && duration <= 7) {
+                riskScore += 8;
+            }
+            // Mild symptoms with long duration (>7 days) or has fever
+            else if (hasFever || duration > 7) {
                 riskScore += 10;
-                reasons.push(language === 'TH' ? 'มีอาการที่มีความเสี่ยงปานกลาง' : 'Moderate-risk symptoms present');
+                if (duration > 7) {
+                    reasons.push(language === 'TH' ? 'อาการนานเกิน 7 วัน' : 'Symptoms lasting over 7 days');
+                }
             }
 
             // Fever level assessment
-            if (symptoms.includes('fever') && patientData.feverLevel === 'highFever') {
+            if (hasFever && patientData.feverLevel === 'highFever') {
                 riskScore += 8;
                 reasons.push(language === 'TH' ? 'มีไข้สูง (≥38.5°C)' : 'High fever (≥38.5°C)');
-            } else if (symptoms.includes('fever') && patientData.feverLevel === 'lowFever') {
+            } else if (hasFever && patientData.feverLevel === 'lowFever') {
                 riskScore += 3;
             }
 
             // Add points for multiple symptoms
             if (symptoms.length > 1) {
-                riskScore += 5 * (symptoms.length - 1); // +5 points per additional symptom
+                riskScore += 5 * (symptoms.length - 1);
                 reasons.push(language === 'TH' ? `มีหลายอาการพร้อมกัน (${symptoms.length} อาการ)` : `Multiple symptoms present (${symptoms.length} symptoms)`);
             }
 
@@ -55,15 +71,6 @@ export default function AssessmentResult({ patientData, translations, language, 
                 reasons.push(language === 'TH' ? 'อาการรุนแรง' : 'Severe symptoms');
             } else if (patientData.symptomSeverity === 'moderate') {
                 riskScore += 8;
-            }
-
-            // Duration factor
-            const duration = parseInt(patientData.symptomDuration) || 0;
-            if (duration > 7) {
-                riskScore += 10;
-                reasons.push(language === 'TH' ? 'อาการนานเกิน 7 วัน' : 'Symptoms lasting over 7 days');
-            } else if (duration > 3) {
-                riskScore += 5;
             }
         }
 
