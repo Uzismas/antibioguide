@@ -24,7 +24,7 @@ export default function Assessment({ translations, language, onBackToLobby, onCo
         liverFunction: 'normal',
 
         // Step 2: Symptom Deep Dive
-        primarySymptom: '',
+        primarySymptom: [], // Changed to array for multiple selection
         symptomDuration: '',
         symptomSeverity: 'mild',
         additionalSymptoms: '',
@@ -189,8 +189,8 @@ export default function Assessment({ translations, language, onBackToLobby, onCo
                                     <label className="block text-sm font-semibold text-gray-700 mb-3">
                                         {translations.renalFunction}
                                     </label>
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                        {['normal', 'mildImpairment', 'moderateImpairment', 'severeImpairment'].map((option) => (
+                                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                                        {['normal', 'mildImpairment', 'moderateImpairment', 'severeImpairment', 'unknown'].map((option) => (
                                             <button
                                                 key={option}
                                                 onClick={() => handleInputChange('renalFunction', option)}
@@ -209,8 +209,8 @@ export default function Assessment({ translations, language, onBackToLobby, onCo
                                     <label className="block text-sm font-semibold text-gray-700 mb-3">
                                         {translations.liverFunction}
                                     </label>
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                        {['normal', 'mildImpairment', 'moderateImpairment', 'severeImpairment'].map((option) => (
+                                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                                        {['normal', 'mildImpairment', 'moderateImpairment', 'severeImpairment', 'unknown'].map((option) => (
                                             <button
                                                 key={option}
                                                 onClick={() => handleInputChange('liverFunction', option)}
@@ -231,24 +231,38 @@ export default function Assessment({ translations, language, onBackToLobby, onCo
                         {currentStep === 2 && (
                             <>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    <label className="block text-sm font-semibold text-gray-700 mb-3">
                                         {translations.primarySymptom}
                                     </label>
-                                    <select
-                                        value={patientData.primarySymptom}
-                                        onChange={(e) => handleInputChange('primarySymptom', e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                    >
-                                        <option value="">{translations.selectSymptom}</option>
-                                        <option value="fever">{translations.fever}</option>
-                                        <option value="cough">{translations.cough}</option>
-                                        <option value="sorethroat">{translations.sorethroat}</option>
-                                        <option value="difficultyBreathing">{translations.difficultyBreathing}</option>
-                                        <option value="urinarySymptoms">{translations.urinarySymptoms}</option>
-                                        <option value="skinInfection">{translations.skinInfection}</option>
-                                        <option value="diarrhea">{translations.diarrhea}</option>
-                                        <option value="other">{translations.other}</option>
-                                    </select>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                        {[
+                                            { value: 'fever', label: translations.fever },
+                                            { value: 'cough', label: translations.cough },
+                                            { value: 'sorethroat', label: translations.sorethroat },
+                                            { value: 'difficultyBreathing', label: translations.difficultyBreathing },
+                                            { value: 'urinarySymptoms', label: translations.urinarySymptoms },
+                                            { value: 'skinInfection', label: translations.skinInfection },
+                                            { value: 'diarrhea', label: translations.diarrhea },
+                                            { value: 'other', label: translations.other }
+                                        ].map((symptom) => (
+                                            <button
+                                                key={symptom.value}
+                                                onClick={() => {
+                                                    const currentSymptoms = patientData.primarySymptom || [];
+                                                    const newSymptoms = currentSymptoms.includes(symptom.value)
+                                                        ? currentSymptoms.filter(s => s !== symptom.value)
+                                                        : [...currentSymptoms, symptom.value];
+                                                    handleInputChange('primarySymptom', newSymptoms);
+                                                }}
+                                                className={`px-4 py-3 rounded-lg border-2 transition-all font-medium text-sm ${(patientData.primarySymptom || []).includes(symptom.value)
+                                                        ? 'border-blue-600 bg-blue-50 text-blue-700'
+                                                        : 'border-gray-300 hover:border-blue-300 text-gray-700'
+                                                    }`}
+                                            >
+                                                {symptom.label}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
 
                                 <div>

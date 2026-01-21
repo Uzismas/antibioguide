@@ -45,11 +45,12 @@ const translations = {
         mildImpairment: 'บกพร่องเล็กน้อย',
         moderateImpairment: 'บกพร่องปานกลาง',
         severeImpairment: 'บกพร่องรุนแรง',
+        unknown: 'ไม่ทราบ',
         liverFunction: 'การทำงานของตับ',
 
         // Step 2: Symptom Deep Dive
-        step2Title: 'อาการโดยละเอียด',
-        primarySymptom: 'อาการหลัก',
+        step2Title: 'อาการและความรุนแรง',
+        primarySymptom: 'อาการหลัก (เลือกได้หลายอาการ)',
         selectSymptom: 'เลือกอาการ',
         fever: 'ไข้',
         cough: 'ไอ',

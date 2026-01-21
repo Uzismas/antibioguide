@@ -19,16 +19,26 @@ export default function AssessmentResult({ patientData, translations, language, 
         let reasons = [];
 
         // 1. Symptom Severity Assessment (30 points)
-        if (patientData.primarySymptom) {
+        if (patientData.primarySymptom && patientData.primarySymptom.length > 0) {
+            const symptoms = Array.isArray(patientData.primarySymptom) ? patientData.primarySymptom : [patientData.primarySymptom];
             const highRiskSymptoms = ['difficultyBreathing', 'urinarySymptoms', 'skinInfection'];
             const moderateRiskSymptoms = ['fever', 'cough', 'sorethroat'];
 
-            if (highRiskSymptoms.includes(patientData.primarySymptom)) {
+            const hasHighRisk = symptoms.some(s => highRiskSymptoms.includes(s));
+            const hasModerateRisk = symptoms.some(s => moderateRiskSymptoms.includes(s));
+
+            if (hasHighRisk) {
                 riskScore += 20;
                 reasons.push(language === 'TH' ? 'มีอาการที่มีความเสี่ยงสูง' : 'High-risk symptoms present');
-            } else if (moderateRiskSymptoms.includes(patientData.primarySymptom)) {
+            } else if (hasModerateRisk) {
                 riskScore += 10;
                 reasons.push(language === 'TH' ? 'มีอาการที่มีความเสี่ยงปานกลาง' : 'Moderate-risk symptoms present');
+            }
+
+            // Add points for multiple symptoms
+            if (symptoms.length > 1) {
+                riskScore += 5 * (symptoms.length - 1); // +5 points per additional symptom
+                reasons.push(language === 'TH' ? `มีหลายอาการพร้อมกัน (${symptoms.length} อาการ)` : `Multiple symptoms present (${symptoms.length} symptoms)`);
             }
 
             // Severity multiplier
@@ -72,6 +82,9 @@ export default function AssessmentResult({ patientData, translations, language, 
             reasons.push(language === 'TH' ? 'การทำงานของอวัยวะบกพร่องปานกลาง' : 'Moderate organ impairment');
         } else if (patientData.renalFunction === 'mildImpairment' || patientData.liverFunction === 'mildImpairment') {
             riskScore += 5;
+        } else if (patientData.renalFunction === 'unknown' || patientData.liverFunction === 'unknown') {
+            riskScore += 8;
+            reasons.push(language === 'TH' ? 'ไม่ทราบสถานะการทำงานของอวัยวะ (ควรตรวจสอบ)' : 'Unknown organ function status (should be evaluated)');
         }
 
         // 4. Recent Antibiotic Use (15 points)
